@@ -1,9 +1,7 @@
-import { ShoppingCart, UserIcon } from "lucide-react"
 import { APP_NAME } from "@/lib/constants"
 import Image from "next/image"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import ModeToggle from "./mode-toggle"
+import Menu from "./menu"
 
 const Header = () => {
   return (
@@ -13,7 +11,7 @@ const Header = () => {
           <Link href="/" className="flex-start">
             <Image
               src="/images/logo.svg"
-              alt="Shopping cart logo"
+              alt={`${APP_NAME} logo`}
               width={48}
               height={48}
               priority={true}
@@ -23,19 +21,7 @@ const Header = () => {
             </span>
           </Link>
         </div>
-        <div className="space-x-2">
-          <ModeToggle />
-          <Button asChild variant="ghost">
-            <Link href="/cart">
-              <ShoppingCart className="mr-2 inline-block" /> Cart
-            </Link>
-          </Button>
-          <Button asChild>
-            <Link href="/sign-in">
-              <UserIcon className="mr-2 inline-block" /> Sign In
-            </Link>
-          </Button>
-        </div>
+        <Menu />
       </div>
     </header>
   )
