@@ -26,12 +26,16 @@ export const prisma =
     result: {
       product: {
         price: {
-          compute(product) {
+          compute(product: {
+            price: import("@prisma/client/runtime/library").Decimal
+          }) {
             return product.price ? product.price.toString() : "0"
           },
         },
         rating: {
-          compute(product) {
+          compute(product: {
+            rating: number | import("@prisma/client/runtime/library").Decimal
+          }) {
             return product.rating ? product.rating.toString() : "0"
           },
         },

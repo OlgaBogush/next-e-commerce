@@ -9,11 +9,16 @@ export async function getLatestProducts() {
     take: LATEST_PRODUCTS_LIMIT,
     orderBy: { createdAt: "desc" },
   })
-  return data.map((product) => ({
-    ...convertToPlainObject(product),
-    price: product.price.toString(),
-    rating: product.rating.toString(),
-  }))
+
+  const plainData = convertToPlainObject(data)
+
+  return plainData as unknown as (Omit<
+    (typeof data)[number],
+    "price" | "rating"
+  > & {
+    price: string
+    rating: string
+  })[]
 }
 
 export async function getProductBySlug(slug: string) {
@@ -24,9 +29,8 @@ export async function getProductBySlug(slug: string) {
   if (!data) return null
   const plainData = convertToPlainObject(data)
 
-  return {
-    ...plainData,
-    price: data.price.toString(),
-    rating: data.rating.toString(),
+  return plainData as unknown as Omit<typeof data, "price" | "rating"> & {
+    price: string
+    rating: string
   }
 }
