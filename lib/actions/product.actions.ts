@@ -3,7 +3,7 @@
 import { prisma } from "@/db/prisma"
 import { convertToPlainObject } from "../utils"
 import { LATEST_PRODUCTS_LIMIT } from "../constants"
-import { Product } from "@prisma/client"
+import { Product } from "@/types"
 
 export async function getLatestProducts() {
   const data = await prisma.product.findMany({
@@ -13,10 +13,7 @@ export async function getLatestProducts() {
 
   const plainData = convertToPlainObject(data)
 
-  return plainData as unknown as (Omit<Product, "price" | "rating"> & {
-    price: string
-    rating: string
-  })[]
+  return plainData as unknown as Product[]
 }
 
 export async function getProductBySlug(slug: string) {
@@ -27,8 +24,5 @@ export async function getProductBySlug(slug: string) {
   if (!data) return null
   const plainData = convertToPlainObject(data)
 
-  return plainData as unknown as Omit<Product, "price" | "rating"> & {
-    price: string
-    rating: string
-  }
+  return plainData as unknown as Product
 }
