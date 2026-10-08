@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client"
 import { PrismaNeon } from "@prisma/adapter-neon"
 import { neonConfig } from "@neondatabase/serverless"
 import ws from "ws"
-import "dotenv/config"
 
 neonConfig.webSocketConstructor = ws
 

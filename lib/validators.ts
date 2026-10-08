@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { formatNumberWithDecimal } from "./utils"
 
-const currrency = z
+const currency = z
   .string()
   .refine(
     (value) => /^\d+(\.\d{2})?$/.test(formatNumberWithDecimal(Number(value))),
@@ -18,7 +18,7 @@ export const insertProductSchema = z.object({
   images: z.array(z.string()).min(1, "Product must have at least one image"),
   isFeatured: z.boolean(),
   banner: z.string().nullable(),
-  price: currrency,
+  price: currency,
 })
 
 export const signInFormSchema = z.object({
@@ -39,3 +39,22 @@ export const signUpFormSchema = z
     message: "Passwords must match",
     path: ["confirmPassword"],
   })
+
+export const cartItemSchema = z.object({
+  productId: z.string().min(1, "Product is required"),
+  name: z.string().min(1, "Name is required"),
+  slug: z.string().min(1, "Slug is required"),
+  qty: z.number().int().nonnegative("Quantity must be a positive number"),
+  image: z.string().min(1, "Image is required"),
+  price: currency,
+})
+
+export const insertCartSchema = z.object({
+  items: z.array(cartItemSchema),
+  itemsPrice: currency,
+  totalPrice: currency,
+  shippingPrice: currency,
+  taxPrice: currency,
+  sessionCartId: z.string().min(1, "Session cart id is required"),
+  userId: z.string().optional().nullable(),
+})
