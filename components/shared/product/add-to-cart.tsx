@@ -22,7 +22,7 @@ const AddToCart = ({ item }: { item: CartItem }) => {
     toast.add({
       type: "success",
       title: "Success",
-      description: `${item.name} added to cart`,
+      description: res.message,
     })
   }
 
