@@ -1,8 +1,10 @@
 import { auth } from "@/auth"
 import { getMyCart } from "@/lib/actions/cart.actions"
-// import { getUserById } from "@/lib/actions/user.actions"
+import { getUserById } from "@/lib/actions/user.actions"
 import { Metadata } from "next"
 import { redirect } from "next/navigation"
+import ShippingAddressForm from "./shipping-address-form"
+import { ShippingAddress } from "@/types"
 
 export const metadata: Metadata = {
   title: "Shipping address",
@@ -20,9 +22,13 @@ const ShippingAddressPage = async () => {
     throw new Error("No user ID")
   }
 
-  //   const user = await getUserById(userId)
+  const user = await getUserById(userId)
 
-  return <>ShippingAddress</>
+  return (
+    <>
+      <ShippingAddressForm address={user.address as ShippingAddress} />
+    </>
+  )
 }
 
 export default ShippingAddressPage
