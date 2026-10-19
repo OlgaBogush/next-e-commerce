@@ -117,7 +117,23 @@ export const config = {
       return session
     },
 
-    authorized({ request }) {
+    authorized({ request, auth }) {
+      const protectedPaths = [
+        /\/shipping-address/,
+        /\/payment-method/,
+        /\/place-order/,
+        /\/profile/,
+        /\/user\/(.*)/,
+        /\/order\/(.*)/,
+        /\/admin/,
+      ]
+
+      const { pathname } = request.nextUrl
+
+      if (!auth && protectedPaths.some((item) => item.test(pathname))) {
+        return false
+      }
+
       if (!request.cookies.get("sessionCartId")) {
         const sessionCartId = crypto.randomUUID()
         const requestHeaders = new Headers(request.headers)
