@@ -106,6 +106,7 @@ export async function addItemToCart(data: CartItem) {
 
 export async function getMyCart() {
   const sessionCartId = (await cookies()).get("sessionCartId")?.value
+
   if (!sessionCartId) throw new Error("Cart session not found")
 
   const authorizedUser = await auth()

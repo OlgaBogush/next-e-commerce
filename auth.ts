@@ -5,6 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { compareSync } from "bcrypt-ts-edge"
 import type { NextAuthConfig } from "next-auth"
 import { NextResponse } from "next/server"
+import { cookies } from "next/headers"
 
 export const config = {
   providers: [
@@ -54,9 +55,11 @@ export const config = {
   adapter: PrismaAdapter(prisma),
   callbacks: {
     // back
-    async jwt({ user, token }) {
+    async jwt({ user, token, trigger, session }) {
       if (user) {
+        token.id = user.id
         token.role = (user as { role?: string }).role
+
         if (user.name === "NO_NAME") {
           token.name = user.email!.split("@")[0]
           await prisma.user.update({
@@ -64,9 +67,37 @@ export const config = {
             data: { name: token.name },
           })
         }
+
+        if (trigger === "signIn" || trigger === "signUp") {
+          const cookiesObject = await cookies()
+          const sessionCartId = cookiesObject.get("sessionCartId")?.value
+
+          if (sessionCartId) {
+            const sessionCart = await prisma.cart.findFirst({
+              where: { sessionCartId },
+            })
+            if (sessionCart) {
+              await prisma.cart.deleteMany({
+                where: {
+                  userId: user.id,
+                },
+              })
+              await prisma.cart.update({
+                where: { id: sessionCart.id },
+                data: { userId: user.id },
+              })
+            }
+          }
+        }
       }
+
+      if (session?.user.name && trigger === "update") {
+        token.name = session.user.name
+      }
+
       return token
     },
+
     // bridge to the front
     async session({ session, user, trigger, token }) {
       // set the user id from the token
@@ -85,6 +116,7 @@ export const config = {
       }
       return session
     },
+
     authorized({ request }) {
       if (!request.cookies.get("sessionCartId")) {
         const sessionCartId = crypto.randomUUID()
