@@ -4,6 +4,9 @@ https://next-e-commerce-black-zeta.vercel.app/
 
 A secure e-commerce platform built with React and Next.js. The application focuses on server-side architecture, type-safe database mutations and dynamic session synchronization.
 
+> [!NOTE]
+> **Status:** The project is under development. The core architecture, database schema and route protection are fully implemented. Currently working on adding payment methods and the admin dashboard.
+
 ### Core Features
 
 - **Full-Stack Architecture:** Built on Next.js 16 (App Router) utilizing Server Actions for secure backend operations.
